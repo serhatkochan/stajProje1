@@ -46,8 +46,9 @@ public class PersonsController {
 	
 	@GetMapping(value = "/findByPerson")
 	public ResponseEntity<?> findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(@Valid @RequestBody Person person){ // spring-validation
-		return ResponseEntity.ok(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
-				person.getFirstName(), person.getLastName(), person.getDateOfBirth(), person.getProvince().getProvinceName()));
+		return ResponseEntity.ok(
+				"ok"
+				);
 	}
 	
 	@GetMapping(value = "/deleteById")

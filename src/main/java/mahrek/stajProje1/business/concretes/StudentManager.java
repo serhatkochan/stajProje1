@@ -41,38 +41,36 @@ public class StudentManager implements StudentService {
 
 	@Override
 	public DataResult<Student> add(Student student) {
-		if(this.findByStudentNo(student.getStudentNo()).isSuccess()) {
-			return new ErrorDataResult<Student>(this.findByStudentNo(student.getStudentNo()).getData(), "Student No Kullanımda.");
-		}
-		else {
-			if(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
-					student.getPerson().getFirstName(), student.getPerson().getLastName()
-					, student.getPerson().getDateOfBirth(), student.getPerson().getProvince().getProvinceName()).isSuccess()) {
-				
-				student.setPerson(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
-					student.getPerson().getFirstName(), student.getPerson().getLastName()
-					, student.getPerson().getDateOfBirth(), student.getPerson().getProvince().getProvinceName()).getData());
-				
-				if(this.studentDao.existsByPerson_PersonId(student.getPerson().getPersonId())) {
-					return new ErrorDataResult<Student>(student, "Bu person zaten student");
-				}
-			}
-			else {
-				this.personService.add(student.getPerson());
-			}
-			this.studentDao.save(student);
-			return new SuccessDataResult<Student>(student, "Student eklendi");
-		}
-//		return new SuccessDataResult<Student>(
-//				"\n getStudentId:" + student.getStudentId()
-//				+"\n getStudentNo:" + student.getStudentNo()
-//				+"\n getFirstName():" + student.getPerson().getFirstName()
-//				+"\n getLastName():" + student.getPerson().getLastName()
-//				+"\n getDateOfBirth()" + student.getPerson().getDateOfBirth()
-//				+"\n getPersonId():" + student.getPerson().getPersonId()
-//				+"\n getProvinceName():" + student.getPerson().getProvince().getProvinceName()
-//				+"\n getProvinceId(): " + student.getPerson().getProvince().getProvinceId()
-//				); 
+//		if(this.findByStudentNo(student.getStudentNo()).isSuccess()) {
+//			return new ErrorDataResult<Student>(this.findByStudentNo(student.getStudentNo()).getData(), "Student No Kullanımda.");
+//		}
+//		else {
+//			if(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
+//					student.getPerson().getFirstName(), student.getPerson().getLastName()
+//					, student.getPerson().getDateOfBirth(), student.getPerson().getProvince().getProvinceName()).isSuccess()) {
+//				
+//				student.setPerson(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
+//					student.getPerson().getFirstName(), student.getPerson().getLastName()
+//					, student.getPerson().getDateOfBirth(), student.getPerson().getProvince().getProvinceName()).getData());
+//				
+//				if(this.studentDao.existsByPerson_PersonId(student.getPerson().getPersonId())) {
+//					return new ErrorDataResult<Student>(student, "Bu person zaten student");
+//				}
+//			}
+//			else {
+//				this.personService.add(student.getPerson());
+//			}
+//			this.studentDao.save(student);
+//			return new SuccessDataResult<Student>(student, "Student eklendi");
+//		}
+		return new SuccessDataResult<Student>(
+				"\n getStudentId:" + student.getStudentId()
+				+"\n getStudentNo:" + student.getStudentNo()
+				+"\n getFirstName():" + student.getPerson().getFirstName()
+				+"\n getLastName():" + student.getPerson().getLastName()
+				+"\n getDateOfBirth()" + student.getPerson().getDateOfBirth()
+				+"\n getPersonId():" + student.getPerson().getPersonId()
+				); 
 		
 	}
 	

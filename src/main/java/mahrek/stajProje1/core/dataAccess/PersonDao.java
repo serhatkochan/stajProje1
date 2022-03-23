@@ -14,10 +14,10 @@ public interface PersonDao extends JpaRepository<Person, Integer> {
 	
 	boolean existsById(int personId);
 	
-	Person findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(String firstName, String lastName, Date dateOfBirth, String provinceName);
-	
-	boolean existsByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(String firstName, String lastName, Date dateOfBirth, String provinceName);
-	
+//	Person findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(String firstName, String lastName, Date dateOfBirth, String provinceName);
+//	
+//	boolean existsByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(String firstName, String lastName, Date dateOfBirth, String provinceName);
+//	
 	Person deleteById(int personId);
 	
 	

@@ -50,8 +50,8 @@ public class Person {
 	
 //	@ManyToOne(cascade = CascadeType.ALL)
 	@ManyToOne()
-	@JoinColumn(name = "province_id")
-	private Province province;
+	@JoinColumn(name = "district_id")
+	private District district;
 	
 	//mappedBy = "student"
 	@OneToOne(mappedBy = "person", cascade = CascadeType.REMOVE) // , orphanRemoval=true // cascade kaldırdık, student silindiğinde person kalıyor artık.

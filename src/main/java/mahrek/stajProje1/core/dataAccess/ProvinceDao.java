@@ -12,9 +12,9 @@ public interface ProvinceDao  extends JpaRepository<Province, Integer> {
 	
 	boolean existsById(int id);
 	
-	Province findByProvinceName(String provinceName);
-	
-	boolean existsByProvinceName(String provinceName);
+//	Province findByProvinceName(String provinceName);
+//	
+//	boolean existsByProvinceName(String provinceName);
 	
 	Province deleteById(int provinceId);
 }

@@ -31,13 +31,14 @@ public class ProvinceManager implements ProvinceService {
 
 	@Override
 	public DataResult<Province> add(Province province) {
-		if(this.provinceDao.existsByProvinceName(province.getProvinceName())) {
-			return new ErrorDataResult<Province>("Bu Province zaten var.");
-		}
-		else {
-			this.provinceDao.save(province);		
-			return new SuccessDataResult<Province>("Province eklendi");
-		}
+//		if(this.provinceDao.existsByProvinceName(province.getProvinceName())) {
+//			return new ErrorDataResult<Province>("Bu Province zaten var.");
+//		}
+//		else {
+//			this.provinceDao.save(province);		
+//			return new SuccessDataResult<Province>("Province eklendi");
+//		}
+		return new SuccessDataResult<Province>("Province");
 	}
 
 	@Override
@@ -47,12 +48,13 @@ public class ProvinceManager implements ProvinceService {
 
 	@Override
 	public DataResult<Province> findByProvinceName(String provinceName) {
-		if(this.provinceDao.existsByProvinceName(provinceName)) {
-			return new SuccessDataResult<Province>(this.provinceDao.findByProvinceName(provinceName), "Province Bulundu");
-		}
-		else {
-			return new ErrorDataResult<Province>("Kullanıcı Bulunamadı");
-		}
+//		if(this.provinceDao.existsByProvinceName(provinceName)) {
+//			return new SuccessDataResult<Province>(this.provinceDao.findByProvinceName(provinceName), "Province Bulundu");
+//		}
+//		else {
+//			return new ErrorDataResult<Province>("Kullanıcı Bulunamadı");
+//		}
+		return new SuccessDataResult<Province>("Province");
 	}
 
 	@Override
@@ -72,18 +74,19 @@ public class ProvinceManager implements ProvinceService {
 
 	@Override
 	public DataResult<Province> update(Province province) {
-		if(findById(province.getProvinceId()).isSuccess()) {
-			if(this.provinceDao.existsByProvinceName(province.getProvinceName())) {
-				return new ErrorDataResult<Province>("Bu Province zaten var.");
-			}
-			else {
-				provinceDao.save(province);
-				return new SuccessDataResult<Province>("Province Güncellendi");
-			}
-		}
-		else {
-			return new ErrorDataResult<Province>("Province bulunamadı.");
-		}
+//		if(findById(province.getProvinceId()).isSuccess()) {
+//			if(this.provinceDao.existsByProvinceName(province.getProvinceName())) {
+//				return new ErrorDataResult<Province>("Bu Province zaten var.");
+//			}
+//			else {
+//				provinceDao.save(province);
+//				return new SuccessDataResult<Province>("Province Güncellendi");
+//			}
+//		}
+//		else {
+//			return new ErrorDataResult<Province>("Province bulunamadı.");
+//		}
+		return new SuccessDataResult<Province>("Province");
 		
 	}
 
