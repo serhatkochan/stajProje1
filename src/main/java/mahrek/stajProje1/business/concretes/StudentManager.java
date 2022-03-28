@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import mahrek.stajProje1.business.abstracts.PersonService;
 import mahrek.stajProje1.business.abstracts.StudentService;
+import mahrek.stajProje1.core.dataAccess.PersonDao;
 import mahrek.stajProje1.core.entities.Person;
 import mahrek.stajProje1.core.entities.User;
+import mahrek.stajProje1.core.entities.dtos.PersonDto;
 import mahrek.stajProje1.core.utilities.results.DataResult;
 import mahrek.stajProje1.core.utilities.results.ErrorDataResult;
 import mahrek.stajProje1.core.utilities.results.ErrorResult;
@@ -21,71 +23,57 @@ import mahrek.stajProje1.core.utilities.results.SuccessDataResult;
 import mahrek.stajProje1.core.utilities.results.SuccessResult;
 import mahrek.stajProje1.dataAccess.abstracts.StudentDao;
 import mahrek.stajProje1.entities.concretes.Student;
+import mahrek.stajProje1.entities.concretes.dtos.StudentAddDto;
+import mahrek.stajProje1.entities.concretes.dtos.StudentDto;
+import mahrek.stajProje1.entities.concretes.dtos.StudentUpdateDto;
 
 @Service // servis
 public class StudentManager implements StudentService {
-	
+
 	private StudentDao studentDao; // injection
 	private PersonService personService;
-	
+	private PersonDao personDao;
+
 	@Autowired
-	public StudentManager(StudentDao studentDao, PersonService personService) {
+	public StudentManager(StudentDao studentDao, PersonService personService, PersonDao personDao) {
 		this.studentDao = studentDao;
 		this.personService = personService;
+		this.personDao = personDao;
 	}
 
 	@Override
-	public DataResult<List<Student>> getAll() {
-		return new SuccessDataResult<List<Student>>(this.studentDao.findAll(), "Student Listelendi");
+	public DataResult<List<StudentDto>> getAll() {
+		return new SuccessDataResult<List<StudentDto>>(studentDao.findAllStudent(), "Student Listelendi");
 	}
 
 	@Override
-	public DataResult<Student> add(Student student) {
-//		if(this.findByStudentNo(student.getStudentNo()).isSuccess()) {
-//			return new ErrorDataResult<Student>(this.findByStudentNo(student.getStudentNo()).getData(), "Student No Kullanımda.");
-//		}
-//		else {
-//			if(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
-//					student.getPerson().getFirstName(), student.getPerson().getLastName()
-//					, student.getPerson().getDateOfBirth(), student.getPerson().getProvince().getProvinceName()).isSuccess()) {
-//				
-//				student.setPerson(this.personService.findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(
-//					student.getPerson().getFirstName(), student.getPerson().getLastName()
-//					, student.getPerson().getDateOfBirth(), student.getPerson().getProvince().getProvinceName()).getData());
-//				
-//				if(this.studentDao.existsByPerson_PersonId(student.getPerson().getPersonId())) {
-//					return new ErrorDataResult<Student>(student, "Bu person zaten student");
-//				}
-//			}
-//			else {
-//				this.personService.add(student.getPerson());
-//			}
-//			this.studentDao.save(student);
-//			return new SuccessDataResult<Student>(student, "Student eklendi");
-//		}
-		return new SuccessDataResult<Student>(
-				"\n getStudentId:" + student.getStudentId()
-				+"\n getStudentNo:" + student.getStudentNo()
-				+"\n getFirstName():" + student.getPerson().getFirstName()
-				+"\n getLastName():" + student.getPerson().getLastName()
-				+"\n getDateOfBirth()" + student.getPerson().getDateOfBirth()
-				+"\n getPersonId():" + student.getPerson().getPersonId()
-				); 
-		
+	public DataResult<StudentDto> add(StudentAddDto studentAddDto) {
+		if (studentDao.existsByStudentNo(studentAddDto.getStudentNo())) {
+			return new ErrorDataResult<StudentDto>("Student No Kullanımda.");
+		} else if (studentDao.existsByPerson_PersonId(studentAddDto.getPersonId())) {
+			return new ErrorDataResult<StudentDto>("Bu Person Zaten Student");
+		} else {
+			Student student = new Student();
+			student.setStudentNo(studentAddDto.getStudentNo());
+			student.setPerson(personDao.getByPersonId(studentAddDto.getPersonId()));
+			studentDao.save(student);
+			return new SuccessDataResult<StudentDto>("Başarılı");
+		}
+
 	}
-	
+
 	@Override
-	public DataResult<List<Student>> getAll(int pageNo, int pageSize){
+	public DataResult<List<StudentDto>> getAll(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return new SuccessDataResult<List<Student>>(this.studentDao.findAll(pageable).getContent(), "Student Listelendi");
+		return new SuccessDataResult<List<StudentDto>>(this.studentDao.findAllStudent(pageable).getContent(),
+				"Student Listelendi");
 	}
 
 	@Override
 	public DataResult<Student> findByStudentNo(String studentNo) {
-		if(this.studentDao.existsByStudentNo(studentNo)) {
-			return new SuccessDataResult<Student>(this.studentDao.findByStudentNo(studentNo));
-		}
-		else {
+		if (this.studentDao.existsByStudentNo(studentNo)) {
+			return new SuccessDataResult<Student>("this.studentDao.findByStudentNo(studentNo)");
+		} else {
 			return new ErrorDataResult<Student>("Student No bulunamadı.");
 		}
 	}
@@ -96,33 +84,32 @@ public class StudentManager implements StudentService {
 	}
 
 	@Override
-	public DataResult<Student> findById(int studentId) {
-		return new SuccessDataResult<Student>(this.studentDao.findById(studentId), "Student getirildi.");
+	public DataResult<StudentDto> findById(int studentId) {
+		return new SuccessDataResult<StudentDto>(studentDao.findByStudentId(studentId), "Student getirildi.");
 	}
 
 	@Override
-	public DataResult<Student> update(Student student) {
-		// farklı bir studentNo girilmek isteniyor ise
-		if(!this.findById(student.getStudentId()).getData().getStudentNo().equals(student.getStudentNo())) {
-			// student no kullanılıyor mu
-			if (this.findByStudentNo(student.getStudentNo()).isSuccess()){
-				return new ErrorDataResult<Student>("Student No Kullanımda.");
+	public DataResult<StudentDto> update(StudentUpdateDto studentUpdateDto) {
+		if (studentDao.findByStudentId(studentUpdateDto.getStudentId()).getPersonId() != studentUpdateDto
+				.getPersonId()) {
+			// person idler farklı
+			if (studentDao.findByPersonId(studentUpdateDto.getPersonId()) != null) {
+				return new ErrorDataResult<StudentDto>("Bu Person zaten Student");
+			}
+		} else if (studentDao.findByStudentNo(studentUpdateDto.getStudentNo()) != null) {
+			if (studentDao.findByStudentNo(studentUpdateDto.getStudentNo()).getStudentId()
+					!= studentUpdateDto.getStudentId()) {
+				// student No kullanımda mı
+				return new ErrorDataResult<StudentDto>("Bu Student No Kullanımda");
 			}
 		}
-		// eğer person bilgisi degistirilmek isteniyor ise
-		if(this.findById(student.getStudentId()).getData().getPerson().getPersonId() != student.getPerson().getPersonId()) {
-			// secilen person zaten student mi
-			if(this.studentDao.existsByPerson_PersonId(student.getPerson().getPersonId())) {
-				return new ErrorDataResult<Student>(student, "Bu person zaten student");
-			}
-			else {
-				student.setPerson(this.personService.findById(student.getPerson().getPersonId()).getData());
-			}
-		}
-		this.studentDao.save(student);
-		return new SuccessDataResult<Student>(student, "Student güncellendi");
-		
+		Student student = new Student();
+		student.setStudentId(studentUpdateDto.getStudentId());
+		student.setStudentNo(studentUpdateDto.getStudentNo());
+		student.setPerson(personDao.getByPersonId(studentUpdateDto.getPersonId()));
+		studentDao.save(student);
+		return new SuccessDataResult<StudentDto>("Student Güncellendi");
+
 	}
-	
-	
+
 }

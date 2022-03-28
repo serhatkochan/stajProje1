@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mahrek.stajProje1.business.abstracts.PersonService;
 import mahrek.stajProje1.core.entities.Person;
+import mahrek.stajProje1.core.entities.dtos.PersonAddDto;
+import mahrek.stajProje1.core.entities.dtos.PersonDto;
+import mahrek.stajProje1.core.entities.dtos.PersonUpdateDto;
 import mahrek.stajProje1.core.utilities.results.DataResult;
 import mahrek.stajProje1.core.utilities.results.ErrorDataResult;
 
@@ -40,8 +43,8 @@ public class PersonsController {
 	}
 
 	@PostMapping(value = "/add")
-	public ResponseEntity<?> add(@Valid @RequestBody Person person){
-		return ResponseEntity.ok(this.personService.add(person)); // hata yoksa this.userService.add çalışır
+	public ResponseEntity<?> add(@Valid @RequestBody PersonAddDto personAddDto){
+		return ResponseEntity.ok(this.personService.add(personAddDto)); // hata yoksa this.userService.add çalışır
 	}
 	
 	@GetMapping(value = "/findByPerson")
@@ -57,22 +60,22 @@ public class PersonsController {
 	}
 	
 	@GetMapping(value = "/getAll")
-	public DataResult<List<Person>> getAll(){
+	public DataResult<List<PersonDto>> getAll(){
 		return personService.getAll();
 	}
 	
 	@PostMapping(value = "/update")
-	public DataResult<Person> update(@Valid @RequestBody Person person) {
-		return personService.update(person);
+	public DataResult<PersonDto> update(@Valid @RequestBody PersonUpdateDto personUpdateDto) {
+		return personService.update(personUpdateDto);
 	}
 	
 	@GetMapping(value = "/findById")
-	public DataResult<Person> findById(@Valid @RequestParam int personId){
+	public DataResult<PersonDto> findById(@Valid @RequestParam int personId){
 		return personService.findById(personId);
 	}
 	
 	@GetMapping(value = "/getPage")
-	public DataResult<List<Person>> getAll(@RequestParam int pageNo, @RequestParam int pageSize){
+	public DataResult<List<PersonDto>> getAll(@RequestParam int pageNo, @RequestParam int pageSize){
 		return personService.getAll(pageNo-1, pageSize);
 	}
 	

@@ -36,7 +36,8 @@ public class Person {
 	@Column(name = "person_id")
 	private int personId;
 	
-	// nationalityId
+	@Column(name = "nationality_id")
+	private String nationalityId;
 	
 	@Column(name = "first_name")
 	private String firstName;

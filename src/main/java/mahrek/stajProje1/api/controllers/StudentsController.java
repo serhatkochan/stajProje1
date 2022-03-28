@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 import mahrek.stajProje1.business.abstracts.StudentService;
 import mahrek.stajProje1.core.utilities.results.DataResult;
 import mahrek.stajProje1.core.utilities.results.ErrorDataResult;
-import mahrek.stajProje1.entities.concretes.Student; 
+import mahrek.stajProje1.entities.concretes.Student;
+import mahrek.stajProje1.entities.concretes.dtos.StudentAddDto;
+import mahrek.stajProje1.entities.concretes.dtos.StudentDto;
+import mahrek.stajProje1.entities.concretes.dtos.StudentUpdateDto; 
 
 @RestController
 @RequestMapping("api/students")
@@ -39,19 +42,19 @@ public class StudentsController {
 	}
 	
 	@GetMapping("/getAll")
-	public DataResult<List<Student>> getAll(){
+	public DataResult<List<StudentDto>> getAll(){
 		return this.studentService.getAll();
 	}
 	
 	
 	@PostMapping(value = "/add")
-	public ResponseEntity<?> add(@Valid @RequestBody Student student){
-		return ResponseEntity.ok(this.studentService.add(student)); // hata yoksa this.userService.add çalışır
+	public ResponseEntity<?> add(@Valid @RequestBody StudentAddDto studentAddDto){
+		return ResponseEntity.ok(this.studentService.add(studentAddDto)); // hata yoksa this.userService.add çalışır
 	}
 	
 	
 	@GetMapping(value = "/getPage")
-	public DataResult<List<Student>> getAll(@RequestParam int pageNo, @RequestParam int pageSize){
+	public DataResult<List<StudentDto>> getAll(@RequestParam int pageNo, @RequestParam int pageSize){
 		return studentService.getAll(pageNo-1, pageSize);
 	}
 	
@@ -66,8 +69,8 @@ public class StudentsController {
 	}
 	
 	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@Valid @RequestBody Student student){
-		return ResponseEntity.ok(this.studentService.update(student));
+	public ResponseEntity<?> update(@Valid @RequestBody StudentUpdateDto studentUpdateDto){
+		return ResponseEntity.ok(this.studentService.update(studentUpdateDto));
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)

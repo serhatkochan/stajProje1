@@ -30,6 +30,7 @@ import mahrek.stajProje1.entities.concretes.Student;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "provinces")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Province {
 	
 	@Id

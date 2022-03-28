@@ -6,23 +6,26 @@ import java.util.List;
 
 import mahrek.stajProje1.core.entities.Person;
 import mahrek.stajProje1.core.entities.Province;
+import mahrek.stajProje1.core.entities.dtos.PersonAddDto;
+import mahrek.stajProje1.core.entities.dtos.PersonDto;
+import mahrek.stajProje1.core.entities.dtos.PersonUpdateDto;
 import mahrek.stajProje1.core.utilities.results.DataResult;
 import mahrek.stajProje1.core.utilities.results.Result;
 
 public interface PersonService {
 
-	DataResult<Person> add(Person person);
+	DataResult<PersonDto> add(PersonAddDto personAddDto);
 	
-	DataResult<List<Person>> getAll();
+	DataResult<List<PersonDto>> getAll();
 	
-	DataResult<Person> findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(String firstName, String lastName, Date dateOfBirth, String provinceName);
+	DataResult<PersonDto> findByFirstNameAndLastNameAndDateOfBirthAndProvince_ProvinceName(String firstName, String lastName, Date dateOfBirth, String provinceName);
 	
-	DataResult<Person> findById(int personId);
+	DataResult<PersonDto> findById(int personId);
 	
-	DataResult<Person> deleteById(int personId);
+	DataResult<PersonDto> deleteById(int personId);
 	
-	DataResult<Person> update(Person person);
+	DataResult<PersonDto> update(PersonUpdateDto personUpdateDto);
 	
-	DataResult<List<Person>> getAll(int pageNo, int pageSize);
+	DataResult<List<PersonDto>> getAll(int pageNo, int pageSize);
 	
 }
