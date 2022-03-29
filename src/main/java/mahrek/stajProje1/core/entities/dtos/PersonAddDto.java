@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonAddDto {
+	private String email;
+	private String password;
 	private String nationalityId;
 	private String firstName;
 	private String lastName;

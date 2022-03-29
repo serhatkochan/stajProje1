@@ -14,9 +14,11 @@ import mahrek.stajProje1.business.abstracts.DistrictService;
 import mahrek.stajProje1.business.abstracts.PersonService;
 import mahrek.stajProje1.core.dataAccess.PersonDao;
 import mahrek.stajProje1.core.dataAccess.ProvinceDao;
+import mahrek.stajProje1.core.dataAccess.UserDao;
 import mahrek.stajProje1.core.entities.District;
 import mahrek.stajProje1.core.entities.Person;
 import mahrek.stajProje1.core.entities.Province;
+import mahrek.stajProje1.core.entities.User;
 import mahrek.stajProje1.core.entities.dtos.PersonAddDto;
 import mahrek.stajProje1.core.entities.dtos.PersonDto;
 import mahrek.stajProje1.core.entities.dtos.PersonUpdateDto;
@@ -32,14 +34,14 @@ import springfox.documentation.swagger2.mappers.ModelMapper;
 public class PersonManager implements PersonService {
 
 	private PersonDao personDao;
-	private ProvinceDao provinceDao;
 	private DistrictService districtService;
+	private UserDao userDao;
 
 	@Autowired
-	public PersonManager(PersonDao personDao, ProvinceDao provinceDao, DistrictService districtService) {
+	public PersonManager(PersonDao personDao, DistrictService districtService, UserDao userDao) {
 		this.personDao = personDao;
-		this.provinceDao = provinceDao;
 		this.districtService = districtService;
+		this.userDao = userDao;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -48,11 +50,17 @@ public class PersonManager implements PersonService {
 		// findBy fonksiyonlarını service haline getir
 		// convertToEntity
 		// convertToDto servislerini oluştur
-		if (this.personDao.findByPerson(personAddDto) != null) {
+		if (personDao.findByEmail(personAddDto.getEmail()) != null) {
+			return new ErrorDataResult<PersonDto>("Bu Email Kullanımda");
+		} else if (this.personDao.findByPerson(personAddDto) != null) {
 			return new ErrorDataResult<PersonDto>(this.personDao.findByPerson(personAddDto),
 					"Bu nationalityId zaten kayıtlı.");
 		} else {
 			Person person = new Person();
+			User user = new User();
+			user.setEmail(personAddDto.getEmail());
+			user.setPassword(personAddDto.getPassword());
+			person.setUser(user);
 			person.setNationalityId(personAddDto.getNationalityId());
 			person.setFirstName(personAddDto.getFirstName());
 			person.setLastName(personAddDto.getLastName());
@@ -103,15 +111,27 @@ public class PersonManager implements PersonService {
 		if (personDto == null) {
 			return new ErrorDataResult<PersonDto>("Kullanıcı bulunamadı");
 		}
-		else if(!personDto.getNationalityId().equals(personUpdateDto.getNationalityId())) {
-			// person nationalityId'leri farklı ise, daha önceden kullanılıyor mu diye kontrol et
-			if(personDao.existsByNationalityId(personUpdateDto.getNationalityId())) {
+		else if (!personDto.getNationalityId().equals(personUpdateDto.getNationalityId())) {
+			// person nationalityId'leri farklı ise, daha önceden kullanılıyor mu diye
+			// kontrol et
+			if (personDao.existsByNationalityId(personUpdateDto.getNationalityId())) {
 				// nationalityId zaten kullanılıyor
 				return new ErrorDataResult<PersonDto>("NationalityId Kullanımda");
 			}
 		}
+		else if(personDao.findByEmail(personUpdateDto.getEmail()) != null) {
+			// email varsa
+			if(!personDto.getEmail().equals(personUpdateDto.getEmail())) {
+				// emailler aynı değilse hata
+				return new ErrorDataResult<PersonDto>("Bu email kullanımda" + personDto.getEmail());
+			}
+		}
 		// ekleme yap
 		Person person = new Person();
+		User user = userDao.findById(personDto.getUserId());
+		user.setEmail(personUpdateDto.getEmail());
+		user.setPassword(personUpdateDto.getPassword());
+		person.setUser(user);
 		person.setPersonId(personUpdateDto.getPersonId());
 		person.setNationalityId(personUpdateDto.getNationalityId());
 		person.setFirstName(personUpdateDto.getFirstName());
@@ -120,7 +140,7 @@ public class PersonManager implements PersonService {
 				personUpdateDto.getDateOfBirth().getMonth(), personUpdateDto.getDateOfBirth().getDate()));
 		person.setDistrict(this.districtService.findById(personUpdateDto.getDistrictId()).getData());
 		personDao.save(person);
-		return new SuccessDataResult<PersonDto>(personDao.findByPerson(personUpdateDto), "başarılı");
+		return new SuccessDataResult<PersonDto>(personDao.findById(personUpdateDto.getPersonId()), "Person Güncellendi");
 	}
 
 	@Override

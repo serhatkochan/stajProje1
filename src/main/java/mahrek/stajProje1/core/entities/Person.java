@@ -1,12 +1,10 @@
 package mahrek.stajProje1.core.entities;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +33,10 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "person_id")
 	private int personId;
+	
+	@OneToOne(cascade = CascadeType.PERSIST) // cascade = CascadeType.ALL yaptığımızda student tarafından person da bir değişiklik yapıldığında personun kendisi de değişiyor
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	@Column(name = "nationality_id")
 	private String nationalityId;

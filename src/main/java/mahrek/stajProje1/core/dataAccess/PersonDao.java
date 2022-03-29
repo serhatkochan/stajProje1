@@ -20,15 +20,23 @@ import mahrek.stajProje1.core.entities.dtos.PersonUpdateDto;
 public interface PersonDao extends JpaRepository<Person, Integer> {
 
 	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
-			+ "(p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth, d.districtId, d.province.provinceName, d.districtName)"
-			+ " From Person p Inner Join p.district d where p.personId = ?1")
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p Inner Join p.district d"
+			+ " Inner Join p.user u"
+			+ " where p.personId = ?1")
 	PersonDto findById(int personId); // id'ye ait kullanıcıyı getirir
 	
 	Person getByPersonId(int personId);
 	
 	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
-			+ "(p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth, d.districtId, d.province.provinceName, d.districtName)"
-			+ " From Person p Inner Join p.district d where p.nationalityId = ?1")
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p Inner Join p.district d"
+			+ " Inner Join p.user u"
+			+ " where p.nationalityId = ?1")
 	PersonDto findByNationalityId(String nationalityId);
 	
 	boolean existsByNationalityId(String nationalityId);
@@ -36,17 +44,31 @@ public interface PersonDao extends JpaRepository<Person, Integer> {
 	boolean existsById(int personId);
 	
 	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
-			+ "(p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth, d.districtId, d.province.provinceName, d.districtName)"
-			+ " From Person p Inner Join p.district d "
-			+ "where "
-			+ "p.nationalityId = :#{#personAddDto.nationalityId}")
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p Inner Join p.district d"
+			+ " Inner Join p.user u"
+			+ " where u.email = ?1")
+	PersonDto findByEmail(String email);
+	
+	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p Inner Join p.district d"
+			+ " Inner Join p.user u"
+			+ " where"
+			+ " p.nationalityId = :#{#personAddDto.nationalityId}")
 	PersonDto findByPerson(@Param("personAddDto") PersonAddDto personAddDto); // NationalityId'ye ait olan kullanıcıyı getirir
 	
 	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
-			+ "(p.personId, p.nationalityId, p.firstName,"
-			+ " p.lastName, p.dateOfBirth, d.districtId, d.province.provinceName, d.districtName)"
-			+ " From Person p Inner Join p.district d "
-			+ "where "
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p Inner Join p.district d"
+			+ " Inner Join p.user u"
+			+ " where "
 			+ "p.nationalityId = :#{#personDto.nationalityId}")
 	PersonDto findByPerson(@Param("personDto") PersonUpdateDto personUpdateDto); // nationalityId'ye ait olan kullanıcıyı getirir
 	
@@ -57,12 +79,19 @@ public interface PersonDao extends JpaRepository<Person, Integer> {
 	PersonDto deleteById(int personId);
 	
 	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
-			+ "(p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth, d.districtId, d.province.provinceName, d.districtName)"
-			+ " From Person p Inner Join p.district d")
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p"
+			+ " Inner Join p.district d"
+			+ " Inner Join p.user u")
 	List<PersonDto> findAllPerson(); // bütün personları getirir
 	
 	@Query("Select new mahrek.stajProje1.core.entities.dtos.PersonDto"
-			+ "(p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth, d.districtId, d.province.provinceName, d.districtName)"
-			+ " From Person p Inner Join p.district d")
+			+ "(u.userId, u.email, u.password"
+			+ ",p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth"
+			+ ", d.districtId, d.province.provinceName, d.districtName)"
+			+ " From Person p Inner Join p.district d"
+			+ " Inner Join p.user u")
 	Page<PersonDto> findAllPerson(Pageable pageable); // personları sayfalar
 }
