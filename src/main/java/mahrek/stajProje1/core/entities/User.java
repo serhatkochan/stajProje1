@@ -42,6 +42,6 @@ public class User {
 	@NotNull
 	private String password;
 	
-	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE) 
-	private Person person;
+//	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+//	private Person person;
 }

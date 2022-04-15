@@ -57,8 +57,8 @@ public class Person {
 	private District district;
 	
 	//mappedBy = "student"
-	@OneToOne(mappedBy = "person", cascade = CascadeType.REMOVE) // , orphanRemoval=true // cascade kaldırdık, student silindiğinde person kalıyor artık.
-	private Student student;
+//	@OneToOne(mappedBy = "person", cascade = CascadeType.REMOVE) // , orphanRemoval=true // cascade kaldırdık, student silindiğinde person kalıyor artık.
+//	private Student student;
 	
 	
 

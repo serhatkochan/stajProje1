@@ -45,9 +45,9 @@ public class Province {
 	private String provinceName;
 	
 //	@OneToMany(mappedBy = "province", cascade = CascadeType.ALL)
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "province_no")
-	private List<District> districts;
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "province_no")
+//	private List<District> districts;
 	
 	
 

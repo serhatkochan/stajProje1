@@ -11,9 +11,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import mahrek.stajProje1.entities.concretes.Student;
 import mahrek.stajProje1.entities.concretes.dtos.StudentDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface StudentDao extends JpaRepository<Student, Integer>{
-	
+
+
+	List<Student> findAll();
+
 	@Query("Select new mahrek.stajProje1.entities.concretes.dtos.StudentDto"
 			+ "(s.studentId, s.studentNo,"
 			+ " p.personId, p.nationalityId, p.firstName, p.lastName, p.dateOfBirth,"

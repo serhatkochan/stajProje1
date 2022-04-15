@@ -41,7 +41,7 @@ public class District { // ilçe
 	@JoinColumn(name = "province_no", insertable = false, updatable = false)
 	private Province province;
 	
-	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL)
-	private List<Person> persons;
+//	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL)
+//	private List<Person> persons;
 
 }
